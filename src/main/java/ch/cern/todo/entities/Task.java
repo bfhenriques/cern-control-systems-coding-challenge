@@ -1,11 +1,9 @@
 package ch.cern.todo.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "Tasks")
 public class Task {
     
     @Id
@@ -14,11 +12,13 @@ public class Task {
 
     private String taskName;
     private String taskDescription;
+    private long deadline;
     private int categoryId;
 
-    public Task(String taskName, String taskDescription, int categoryId) {
+    public Task(String taskName, String taskDescription, long deadline, int categoryId) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
+        this.deadline = deadline;
         this.categoryId = categoryId;
     }
 
@@ -42,6 +42,14 @@ public class Task {
 
     public void setTaskDescription(String taskDescription) {
         this.taskDescription = taskDescription;
+    }
+
+    public long getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(long deadline) {
+        this.deadline = deadline;
     }
 
     public int getCategoryId() {

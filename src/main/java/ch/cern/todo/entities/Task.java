@@ -1,6 +1,9 @@
 package ch.cern.todo.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "Tasks")
@@ -8,14 +11,25 @@ public class Task {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "TaskId")
     private int taskId;
 
+    @Column(name = "TaskName")
     private String taskName;
+
+    @Column(name = "TaskDescription")
     private String taskDescription;
-    private long deadline;
+
+    @Column(name = "Deadline")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
+    private Timestamp deadline;
+
+    //@ManyToOne(fetch = FetchType.EAGER, targetEntity = Category.class, cascade=CascadeType.MERGE)
+    //@Join
+    @Column(name = "CategoryId")
     private int categoryId;
 
-    public Task(String taskName, String taskDescription, long deadline, int categoryId) {
+    public Task(String taskName, String taskDescription, Timestamp deadline, int categoryId) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.deadline = deadline;
@@ -44,11 +58,11 @@ public class Task {
         this.taskDescription = taskDescription;
     }
 
-    public long getDeadline() {
+    public Timestamp getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(long deadline) {
+    public void setDeadline(Timestamp deadline) {
         this.deadline = deadline;
     }
 
@@ -58,5 +72,10 @@ public class Task {
     
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Task(id=%s, name=\"%s\", description=\"%s\", deadline=\"%s\", categoryId=\"%s\")", taskId, taskName, taskDescription, deadline, categoryId);
     }
 }

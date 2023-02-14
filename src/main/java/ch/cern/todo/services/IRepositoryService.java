@@ -1,6 +1,7 @@
 package ch.cern.todo.services;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IRepositoryService<T> {
 
@@ -8,9 +9,9 @@ public interface IRepositoryService<T> {
 
     List<T> getAll();
 
-    T getById(int id);
+    Optional<T> getById(int id);
 
-    T edit(T entity);
+    Optional<T> edit(int id, T entity);
 
-    Boolean delete(int id);
+    void delete(int id);
 }

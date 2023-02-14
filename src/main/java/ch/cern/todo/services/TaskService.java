@@ -6,12 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService implements IRepositoryService<Task> {
 
     @Autowired
-    private TaskRepository repo;
+    TaskRepository repo;
 
     @Override
     public Task create(Task task) {
@@ -24,61 +25,33 @@ public class TaskService implements IRepositoryService<Task> {
     }
 
     @Override
-    public Task getById(int id) {
-        return repo.findById(id).orElse(null);
+    public Optional<Task> getById(int id) {
+        return repo.findById(id);
     }
 
     @Override
-    public Task edit(Task task) {
-        Task persistedTask = repo.findById(task.getTaskId()).orElse(null);
+    public Optional<Task> edit(int id, Task task) {
+        Optional<Task> persistedTask = repo.findById(id);
 
-        if (persistedTask != null) {
-            persistedTask.setTaskName(task.getTaskName());
-            persistedTask.setTaskDescription(task.getTaskDescription());
-            persistedTask.setCategoryId(task.getCategoryId());
+        if (persistedTask.isPresent()) {
+            Task optTask = persistedTask.get();
+            optTask.setTaskName(task.getTaskName());
+            optTask.setTaskDescription(task.getTaskDescription());
+            optTask.setDeadline(task.getDeadline());
+            optTask.setCategoryId(task.getCategoryId());
 
-            return repo.save(persistedTask);
+            return Optional.of(repo.save(optTask));
         }
 
-        return repo.save(task);
+        return Optional.empty();
     }
 
     @Override
-    public Boolean delete(int id) {
+    public void delete(int id) {
         repo.deleteById(id);
-        return true;
     }
 
-    /*
-    public Task createTask(Task task) {
-        return repo.save(task);
+    public void deleteAll() {
+        repo.deleteAll();
     }
-
-    public List<Task> getAllTasks() {
-        return repo.findAll();
-    }
-
-    public Task getTaskById(int id) {
-        return repo.findById(id).orElse(null);
-    }
-
-    public Task editTask(Task task) {
-        Task persistedTask = repo.findById(task.getTaskId()).orElse(null);
-
-        if (persistedTask != null) {
-            persistedTask.setTaskName(task.getTaskName());
-            persistedTask.setTaskDescription(task.getTaskDescription());
-            persistedTask.setCategoryId(task.getCategoryId());
-
-            return repo.save(persistedTask);
-        }
-
-        return repo.save(task);
-    }
-
-    public Boolean deleteTask(int id) {
-        repo.deleteById(id);
-        return true;
-    }
-    */
 }

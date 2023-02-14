@@ -1,11 +1,20 @@
 # Cern Control Systems coding challenge
 
-This is a skeleton of Spring Boot application which should be used as a start point to create a working one.
-The goal of this task is to create simple web application which allows users to create TODOs via REST API.
+[Challenge](./CHALLENGE.md)
 
-Below you may find a proposition of the DB model:
+## API Specification
 
-![DB model](DBModel.png)
+| Methods | Urls            | Request Body                                                                                                                                   | Actions               |
+|---------|-----------------|------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------|
+| POST    | /add-category   | {<br/>"categoryName": "dummy name",<br/>"categoryDescription": "dummy description"<br/>}                                                       | Create a new category |
+| GET     | /all-categories | -                                                                                                                                              | Get all categories    |
+| GET     | /categories/:id | -                                                                                                                                              | Get category by id    |
+| PUT     | /categories/:id | {<br/>"categoryName": "dummy name",<br/>"categoryDescription": "dummy description"<br/>}                                                       | Update category by id |
+| DELETE  | /categories/:id | -                                                                                                                                              | Delete category by id |
+| POST    | /add-task       | {<br/>"taskName": "dummy name",<br/>"taskDescription": "dummy description", <br/>"deadline": "yyyy-MM-dd HH:mm:ss", <br/>"categoryId": 1<br/>} | Create a new category |
+| GET     | /all-tasks      | -                                                                                                                                              | Get all tasks         |
+| GET     | /tasks/:id      | -                                                                                                                                              | Get task by id        |
+| PUT     | /tasks/:id      | {<br/>"taskName": "dummy name",<br/>"taskDescription": "dummy description", <br/>"deadline": "yyyy-MM-dd HH:mm:ss", <br/>"categoryId": 1<br/>} | Update task by id     |
+| DELETE  | /tasks/:id      | -                                                                                                                                              | Delete task by id     |
+| DELETE  | /tasks          | -                                                                                                                                              | Delete all tasks      |
 
-To complete the exercices please implement all missing classes and functonalites in order to be able to store and retrieve information about tasks and their categories.
-Once you are ready, please send it to me (ie link to your git repository) before  our interview.

@@ -8,11 +8,13 @@ public class Category {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int categoryId;
+    @Column(name = "CategoryId")
+    int categoryId;
 
-    @Column(unique = true)
+    @Column(name = "CategoryName", unique = true)
     private String categoryName;
 
+    @Column(name = "CategoryDescription")
     private String categoryDescription;
 
     public Category(String categoryName, String categoryDescription) {
@@ -40,5 +42,10 @@ public class Category {
 
     public void setCategoryDescription(String categoryDescription) {
         this.categoryDescription = categoryDescription;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Category(id=%s, name=\"%s\", description=\"%s\")", categoryId, categoryName, categoryDescription);
     }
 }

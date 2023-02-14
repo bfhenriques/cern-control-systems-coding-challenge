@@ -2,14 +2,17 @@ package ch.cern.todo.services;
 
 import ch.cern.todo.entities.Category;
 import ch.cern.todo.repositories.CategoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryService implements IRepositoryService<Category> {
 
-    private CategoryRepository repo;
+    @Autowired
+    CategoryRepository repo;
 
     @Override
     public Category create(Category entity) {
@@ -22,59 +25,27 @@ public class CategoryService implements IRepositoryService<Category> {
     }
 
     @Override
-    public Category getById(int id) {
-        return repo.findById(id).orElse(null);
+    public Optional<Category> getById(int id) {
+        return repo.findById(id);
     }
 
     @Override
-    public Category edit(Category category) {
-        Category persistedCategory = repo.findById(category.getCategoryId()).orElse(null);
+    public Optional<Category> edit(int id, Category category) {
+        Optional<Category> persistedCategory = repo.findById(category.getCategoryId());
 
-        if (persistedCategory != null) {
-            persistedCategory.setCategoryName(category.getCategoryName());
-            persistedCategory.setCategoryDescription(category.getCategoryDescription());
+        if (persistedCategory.isPresent()) {
+            Category optCategory = persistedCategory.get();
+            optCategory.setCategoryName(category.getCategoryName());
+            optCategory.setCategoryDescription(category.getCategoryDescription());
 
-            return repo.save(persistedCategory);
+            return Optional.of(repo.save(optCategory));
         }
 
-        return repo.save(category);
+        return Optional.empty();
     }
 
     @Override
-    public Boolean delete(int id) {
+    public void delete(int id) {
         repo.deleteById(id);
-        return true;
     }
-
-    /*
-    public Category createCategory(Category category) {
-        return repo.save(category);
-    }
-
-    public List<Category> getAllCategory() {
-        return repo.findAll();
-    }
-
-    public Category getCategoryById(int id) {
-        return repo.findById(id).orElse(null);
-    }
-
-    public Category editCategory(Category category) {
-        Category persistedCategory = repo.findById(category.getCategoryId()).orElse(null);
-
-        if (persistedCategory != null) {
-            persistedCategory.setCategoryName(category.getCategoryName());
-            persistedCategory.setCategoryDescription(category.getCategoryDescription());
-
-            return repo.save(persistedCategory);
-        }
-
-        return repo.save(category);
-    }
-
-    public Boolean deleteCategory(int id) {
-        repo.deleteById(id);
-        return true;
-    }
-    */
 }

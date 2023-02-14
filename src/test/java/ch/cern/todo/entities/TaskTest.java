@@ -2,6 +2,7 @@ package ch.cern.todo.entities;
 
 import org.junit.jupiter.api.Test;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
@@ -11,7 +12,7 @@ class TaskTest {
 
     private static final String taskName = "dummy task name";
     private static final String taskDescription = "dummy task description";
-    private static final long deadline = Instant.now().plus(2, ChronoUnit.DAYS).toEpochMilli();
+    private static final Timestamp deadline = Timestamp.from(Instant.now().plus(1,ChronoUnit.DAYS));
     private static final int categoryId = 1;
 
     @Test

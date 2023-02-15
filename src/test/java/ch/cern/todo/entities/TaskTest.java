@@ -16,9 +16,15 @@ class TaskTest {
     private static final int categoryId = 1;
 
     @Test
-    void testCorrectCreationOfTaskWithParamsConstructor() {
+    void testCorrectCreationOfTaskWithFullParamsConstructor() {
         Task task = new Task(taskName, taskDescription, deadline, categoryId);
-        executeAssertions(task);
+        executeAssertions(task, false);
+    }
+
+    @Test
+    void testCorrectCreationOfTaskWithPartialParamsConstructor() {
+        Task task = new Task(taskName, taskDescription, deadline);
+        executeAssertions(task, true);
     }
 
     @Test
@@ -28,14 +34,14 @@ class TaskTest {
         task.setTaskDescription(taskDescription);
         task.setDeadline(deadline);
         task.setCategoryId(categoryId);
-        executeAssertions(task);
+        executeAssertions(task, false);
     }
 
-    private static void executeAssertions(Task task) {
+    private static void executeAssertions(Task task, boolean skipCategory) {
         assertEquals(0, task.getTaskId());
         assertEquals(taskName, task.getTaskName());
         assertEquals(taskDescription, task.getTaskDescription());
         assertEquals(deadline, task.getDeadline());
-        assertEquals(categoryId, task.getCategoryId());
+        if (!skipCategory) assertEquals(categoryId, task.getCategoryId());
     }
 }

@@ -14,18 +14,16 @@ public class Task {
     @Column(name = "TaskId")
     private int taskId;
 
-    @Column(name = "TaskName")
+    @Column(name = "TaskName", length = 100)
     private String taskName;
 
-    @Column(name = "TaskDescription")
+    @Column(name = "TaskDescription", length = 500)
     private String taskDescription;
 
     @Column(name = "Deadline")
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     private Timestamp deadline;
 
-    //@ManyToOne(fetch = FetchType.EAGER, targetEntity = Category.class, cascade=CascadeType.MERGE)
-    //@Join
     @Column(name = "CategoryId")
     private int categoryId;
 
@@ -34,6 +32,12 @@ public class Task {
         this.taskDescription = taskDescription;
         this.deadline = deadline;
         this.categoryId = categoryId;
+    }
+
+    public Task(String taskName, String taskDescription, Timestamp deadline) {
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.deadline = deadline;
     }
 
     public Task() {}

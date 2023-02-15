@@ -11,10 +11,10 @@ public class Category {
     @Column(name = "CategoryId")
     int categoryId;
 
-    @Column(name = "CategoryName", unique = true)
+    @Column(name = "CategoryName", unique = true, length = 100)
     private String categoryName;
 
-    @Column(name = "CategoryDescription")
+    @Column(name = "CategoryDescription", length = 500)
     private String categoryDescription;
 
     public Category(String categoryName, String categoryDescription) {

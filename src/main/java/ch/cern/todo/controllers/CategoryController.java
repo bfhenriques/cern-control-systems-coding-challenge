@@ -1,7 +1,7 @@
 package ch.cern.todo.controllers;
 
 import ch.cern.todo.entities.Category;
-import ch.cern.todo.services.CategoryService;
+import ch.cern.todo.repositories.CategoryRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +19,13 @@ public class CategoryController {
     private final Logger logger = LogManager.getLogger(getClass());
 
     @Autowired
-    CategoryService categoryService;
+    CategoryRepository categoryRepository;
 
     @PostMapping("/add-category")
     public ResponseEntity<Category> addCategory(@RequestBody Category category) {
         try {
             logger.info(String.format("Creating category: %s.", category));
-            Category persistedCategory = categoryService.create(category);
+            Category persistedCategory = categoryRepository.save(category);
 
             logger.info(String.format("Created category: %s.", persistedCategory));
             return new ResponseEntity<>(persistedCategory, HttpStatus.CREATED);
@@ -39,7 +39,7 @@ public class CategoryController {
     public ResponseEntity<List<Category>> getAllCategories() {
         try {
             logger.info("Getting all categories.");
-            List<Category> allCategories = categoryService.getAll();
+            List<Category> allCategories = categoryRepository.findAll();
 
             if (allCategories.isEmpty()) {
                 logger.info("No categories found.");
@@ -58,7 +58,7 @@ public class CategoryController {
     public ResponseEntity<Category> getCategoryById(@PathVariable("id") int categoryId) {
         try {
             logger.info(String.format("Getting category with id=%s.", categoryId));
-            Optional<Category> persistedCategory = categoryService.getById(categoryId);
+            Optional<Category> persistedCategory = categoryRepository.findById(categoryId);
 
             if (persistedCategory.isEmpty()) {
                 logger.info(String.format("Category with id=%s not found.", categoryId));
@@ -77,15 +77,18 @@ public class CategoryController {
     public ResponseEntity<Category> editCategory(@PathVariable("id") int categoryId, @RequestBody Category category) {
         try {
             logger.info(String.format("Editing category with id=%s.", categoryId));
-            Optional<Category> persistedCategory = categoryService.edit(categoryId, category);
+            Optional<Category> persistedCategory = categoryRepository.findById(categoryId);
 
             if (persistedCategory.isEmpty()) {
                 logger.info(String.format("Category with id=%s not found.", categoryId));
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
+            Category editCategory = persistedCategory.get();
+            editCategory.setCategoryName(category.getCategoryName());
+            editCategory.setCategoryDescription(category.getCategoryDescription());
 
-            logger.info(String.format("Edited category: %s.", persistedCategory));
-            return new ResponseEntity<>(persistedCategory.get(), HttpStatus.OK);
+            logger.info(String.format("Edited category: %s.", editCategory));
+            return new ResponseEntity<>(categoryRepository.save(editCategory), HttpStatus.OK);
         } catch (Exception ex) {
             logger.error(String.format("Error editing category with id=%s.", categoryId), ex);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -96,7 +99,7 @@ public class CategoryController {
     public ResponseEntity<Category> deleteCategory(@PathVariable("id") int categoryId) {
         try {
             logger.info(String.format("Deleting category with id=%s.", categoryId));
-            categoryService.delete(categoryId);
+            categoryRepository.deleteById(categoryId);
 
             return new ResponseEntity<>(null, HttpStatus.OK);
         } catch (Exception ex) {
